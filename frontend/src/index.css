@@ -1,0 +1,1171 @@
+/* ── Design tokens: colours and sizes, defined once and reused everywhere ── */
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --yellow: #ffc83d;
+  --teal: #22c3b4;
+  /* Cards are white on a white page, so a soft shadow lifts them off it */
+  --shadow: 0 6px 24px rgb(28 27 34 / 0.07);
+  --text: #1c1b22;
+  --muted: #5f5c6b;
+  --border: #e3e1ec;
+  --primary: #6d4aff;
+  --primary-text: #ffffff;
+  --accent: #ff6b8b;
+  --ok: #1f9d55;
+  --warn: #c27c0e;
+  --bad: #d64545;
+  --radius: 16px;
+  --page-width: 960px; /* how wide the content may get */
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Always the white theme, even when the device is set to dark mode.
+   (We used to switch to dark colours here with @media (prefers-color-scheme: dark).)
+   color-scheme tells the browser too, so form controls and scrollbars match. */
+:root {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+a {
+  color: var(--primary);
+}
+
+/* ── Layout: header / main / footer ── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header,
+.app-footer {
+  padding: 16px;
+  max-width: var(--page-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* The presenter screen goes on a projector/TV, so let it use more width.
+   :has() = "an .app that contains a .presenter". Changing the variable here
+   widens the header, page and footer together, so they stay aligned. */
+.app:has(.presenter) {
+  --page-width: 1440px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* Two overlapping circles: a tiny "pair" logo made with CSS only */
+.logo-dots {
+  width: 30px;
+  height: 18px;
+  background:
+    radial-gradient(circle at 9px 9px, var(--primary) 8.5px, transparent 9px),
+    radial-gradient(circle at 21px 9px, var(--accent) 8.5px, transparent 9px);
+}
+
+/* ── Home page ── */
+.hero {
+  text-align: center;
+  padding: 32px 0 24px;
+}
+
+.hero h1 {
+  font-size: clamp(1.9rem, 6vw, 3rem); /* grows with the screen, within limits */
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+
+.lead {
+  color: var(--muted);
+  font-size: 1.1rem;
+  max-width: 34rem;
+  margin: 0 auto;
+}
+
+.choices {
+  display: grid;
+  gap: 16px;
+  /* 1 column on phones, 2 side by side when there's room */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 16px 0 40px;
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 24px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.choice:hover,
+.choice:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.choice-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-text);
+}
+
+.choice-emoji {
+  font-size: 2rem;
+}
+
+.choice-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.choice-text {
+  opacity: 0.8;
+}
+
+.how {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+
+.how h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.how ol {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--muted);
+}
+
+/* ── Placeholder pages (until Steps 8–9 replace them) ── */
+.placeholder {
+  text-align: center;
+  padding: 48px 0;
+}
+
+/* ── Server status light in the footer ── */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.status-online .status-dot { background: var(--ok); }
+.status-no-db .status-dot { background: var(--warn); }
+.status-offline .status-dot { background: var(--bad); }
+
+/* ── Shared building blocks ── */
+.muted { color: var(--muted); }
+
+.error {
+  color: var(--bad);
+  font-weight: 600;
+}
+
+.center-page {
+  text-align: center;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px; /* comfortable tap target on phones */
+  padding: 5px 20px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+
+.btn:active:not(:disabled) { transform: scale(0.97); }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.btn-ghost {
+  background: var(--surface); /* solid, so background shapes never show through the text */
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-lg {
+  font-size: 1.2rem;
+  padding: 14px 32px;
+}
+
+/* ── Presenter screen ── */
+.presenter {
+  display: grid;
+  gap: 24px;
+  /* Phone/tablet: stacked. Big screen: code on the left, people on the right. */
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .presenter { grid-template-columns: minmax(300px, 2fr) 3fr; }
+}
+
+.join-panel,
+.people-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.join-panel {
+  text-align: center;
+  align-self: start;
+  /* Makes this card a "container", so children can size themselves
+     relative to the CARD's width (cqi units) instead of the whole window. */
+  container-type: inline-size;
+}
+
+.join-label {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.join-url {
+  display: block; /* a link is inline by default; block lets the margins apply */
+  margin: 4px 0 20px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  word-break: break-all; /* long URLs wrap instead of overflowing */
+}
+
+.join-url:hover,
+.join-url:focus-visible {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.room-code {
+  margin: 0 0 16px;
+  /* 25cqi = 25% of the card's width, so the code always fits its card,
+     but never bigger than 6.5rem. */
+  font-size: min(25cqi, 6.5rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  /* letter-spacing also adds space AFTER the last letter, which pushes the
+     code off-centre. Equal padding on the left balances it. */
+  padding-left: 0.12em;
+  line-height: 1;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.live-on .status-dot { background: var(--ok); }
+.live-off .status-dot { background: var(--warn); }
+
+.people-header h2 {
+  margin: 0 0 4px;
+}
+
+.people-header p { margin: 0; }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.actions p { margin: 0; }
+
+/* ── Forms (Join page) ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+  margin-top: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.input {
+  font: inherit;
+  /* 16px or more stops iPhones from zooming in when the box is tapped */
+  font-size: 1rem;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+}
+
+.input:focus {
+  outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  border-color: var(--primary);
+}
+
+.input-code {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 800;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.form .btn { width: 100%; }
+
+/* ── Result page (participant's phone) ── */
+.result {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.result > p { margin: 0; }
+
+.pin-card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.pin-card p { margin: 0; }
+
+.pin-card-target {
+  border-color: var(--primary);
+  border-width: 2px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pin {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  padding-left: 0.15em; /* balance letter-spacing, as with the room code */
+  font-variant-numeric: tabular-nums; /* every digit the same width */
+  line-height: 1.1;
+  margin: 6px 0 !important;
+}
+
+.pin-target {
+  font-size: 4.2rem;
+  color: var(--primary);
+}
+
+.waiting {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.reveal { margin: 8px 0; }
+
+.leave { font-size: 0.9rem; }
+
+/* ── Name storm (shuffle animation) ──────────────────────────
+   How the swirl works, for ONE name:
+     .storm-orbit sits at the exact centre of the screen.
+     Its transform is:  rotate(angle) → translateX(radius) → rotate(-angle)
+       1. rotate(angle)      turn to face a direction
+       2. translateX(radius) step outwards that far   → now on a circle
+       3. rotate(-angle)     turn back, so the text stays upright
+     Animating "angle" from A to A+360deg moves the name round the circle.
+   Each name gets its own --radius / --angle / --duration, so they all
+   orbit at different distances and speeds: a storm. */
+
+.storm {
+  position: fixed;
+  inset: 0; /* cover the whole screen */
+  z-index: 100;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(6px); /* blur the page behind it */
+  animation: storm-fade-in 0.3s ease-out both;
+}
+
+.storm-field {
+  position: absolute;
+  inset: 0;
+  /* the whole storm grows in from the centre… */
+  animation: storm-gather 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* …and bursts outwards when the shuffle is done */
+.storm[data-phase='done'] .storm-field {
+  animation: storm-burst 0.7s ease-in forwards;
+}
+
+.storm-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  animation: storm-spin var(--duration) linear var(--delay) infinite;
+  will-change: transform; /* hint: let the GPU handle this element */
+}
+
+.storm-orbit-reverse {
+  animation-direction: reverse;
+}
+
+.storm-name {
+  display: block;
+  transform: translate(-50%, -50%); /* centre the text on its point */
+  white-space: nowrap;
+  font-size: var(--size);
+  font-weight: 800;
+  color: var(--color);
+  text-shadow: 0 2px 12px color-mix(in srgb, var(--bg) 70%, transparent);
+}
+
+.storm-message {
+  position: relative;
+  z-index: 1; /* above the flying names */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  padding: 16px 28px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+}
+
+.storm-title {
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 800;
+}
+
+.storm[data-phase='storm'] .storm-title {
+  animation: storm-pulse 1s ease-in-out infinite;
+}
+
+.storm[data-phase='done'] .storm-message {
+  animation: storm-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+.storm-sub {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--muted);
+}
+
+@keyframes storm-spin {
+  from { transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))); }
+  to   { transform: rotate(calc(var(--angle) + 360deg)) translateX(var(--radius)) rotate(calc(-1 * (var(--angle) + 360deg))); }
+}
+
+@keyframes storm-gather {
+  from { transform: scale(0.1) rotate(-90deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes storm-burst {
+  to { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes storm-fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes storm-pulse {
+  50% { transform: scale(1.06); opacity: 0.75; }
+}
+
+@keyframes storm-pop {
+  from { transform: scale(0.6); opacity: 0; }
+}
+
+/* Reduced motion: no spinning or bursting. The names just appear in a calm
+   cloud and the overlay fades, so the moment still feels like an event. */
+@media (prefers-reduced-motion: reduce) {
+  .storm-orbit {
+    animation: none;
+    transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle)));
+  }
+  .storm-field,
+  .storm[data-phase='done'] .storm-field,
+  .storm[data-phase='storm'] .storm-title,
+  .storm[data-phase='done'] .storm-message {
+    animation: none;
+  }
+  .storm-field { opacity: 0.35; }
+}
+
+/* Small helper text under a form field */
+.field-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* The code box shows typed codes big, spaced and in CAPS. Its placeholder
+   should look like a hint instead, so undo those styles for it. */
+.input-code::placeholder {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+/* The presenter's room description, under the big room code */
+.join-desc {
+  max-width: 28rem;
+  margin: 0 auto 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere; /* a long word can't push the card wider */
+}
+
+/* The same description at the top of a participant's result page */
+.room-description {
+  font-size: 1.15rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* ── Danger buttons (deleting things) ── */
+.btn-danger {
+  background: var(--bad);
+  color: #fff;
+}
+
+.btn-danger-ghost {
+  background: var(--surface);
+  color: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 45%, transparent);
+  font-size: 0.9rem;
+}
+
+/* Sits under both panels, on the right, away from the Shuffle button */
+.room-admin {
+  grid-column: 1 / -1; /* span the full width of the presenter grid */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ── Confirmation dialog ── */
+.dialog {
+  max-width: min(30rem, calc(100vw - 32px));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  padding: 24px;
+}
+
+/* The dim layer behind an open modal dialog */
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+.dialog h2 { margin-top: 0; }
+.dialog ul { padding-left: 1.2rem; }
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* A friendly one-line notice, e.g. "Room XK4P … has been deleted." */
+.notice {
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 0 0 8px;
+}
+
+/* A gentle nudge, e.g. "2 people are not assigned… Re-shuffle" */
+.hint {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+
+/* ── Floating background shapes ──────────────────────────────
+   Eight shapes float across the whole screen. The MOVEMENT is done in
+   JavaScript (BackgroundShapes.jsx), because the rules ("never two heading
+   the same way", "don't bunch up") need the shapes to know about each other,
+   which a CSS animation can't do. CSS only draws them. They're soft pastel
+   colours and sit BEHIND the page (z-index 0), so text on top stays readable. */
+.bg-shapes {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none; /* clicks go straight through to the page */
+}
+
+.app-header,
+.app-main,
+.app-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.shape {
+  /* Start at the top-left corner; JavaScript moves it with transform */
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* "medium": about 120px on a laptop, ~50px on a phone, times its own --scale */
+  --size: calc(clamp(48px, 9vw, 120px) * var(--scale));
+  width: var(--size);
+  height: var(--size);
+  opacity: 0.3;
+  will-change: transform; /* hint: let the GPU handle the movement */
+}
+
+/* The shapes CSS can draw by itself */
+.shape-circle { border-radius: 50%; background: var(--color); opacity: 0.22; }
+.shape-ring   { border-radius: 50%; border: calc(var(--size) * 0.14) solid var(--color); }
+.shape-square { border-radius: 22%; background: var(--color); opacity: 0.28; }
+.shape-half   { height: calc(var(--size) / 2); border-radius: var(--size) var(--size) 0 0; background: var(--color); }
+
+/* The SVG ones (drawn in BackgroundShapes.jsx) */
+.shape-triangle,
+.shape-plus,
+.shape-star     { fill: var(--color); opacity: 0.45; }
+.shape-squiggle {
+  width: calc(var(--size) * 1.25);
+  fill: none;
+  stroke: var(--color);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+/* Lift the white cards off the white page */
+.choice,
+.how,
+.join-panel,
+.people-panel,
+.pin-card,
+.dialog {
+  box-shadow: var(--shadow);
+}
+
+/* ── Header: Pairly logo + church logo, side by side ── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 44px;
+  background: var(--border);
+}
+
+.church-logo {
+  /* width/height attributes in the HTML reserve the space (no jumping while
+     it loads); this sets the real size and keeps the shape. */
+  height: 25px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .church-logo { height: 25px; }
+  .brand-divider { height: 34px; }
+}
+
+/* ── Presenter login ───────────────────────────────────── */
+
+/* Logos on the left, "Log out" on the right */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.account-name {
+  font-size: 0.9rem;
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-error {
+  flex-basis: 100%;
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  min-height: 0;
+}
+
+.login-guest {
+  margin-top: 24px;
+  text-align: center;
+}
+
+/* "Your rooms" on /present */
+.room-list-section {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 32px;
+}
+
+.room-list-section h2 {
+  font-size: 1.1rem;
+  margin: 0 0 10px;
+}
+
+.room-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.room-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.room-link:hover,
+.room-link:focus-visible {
+  border-color: var(--primary);
+}
+
+.room-link-code {
+  min-width: 4.2em; /* same width for every code, so the descriptions line up */
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.room-link-text {
+  display: grid;
+  text-align: left;
+  min-width: 0; /* lets a long description shrink instead of overflowing */
+  font-size: 0.9rem;
+}
+
+.room-link-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── "Continue as …" on the home page (this phone already joined a room) ── */
+.continue-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  border: 2px solid var(--primary);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.continue-card:hover,
+.continue-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.continue-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; /* lets a long name wrap instead of pushing the arrow off */
+}
+
+.continue-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.continue-pin {
+  color: var(--primary);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}
+
+.continue-arrow {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-text);
+  font-weight: 800;
+}
+
+/* "Save my PIN as an image" under your own PIN */
+.save-pin { margin-top: 12px; }
+
+/* ── Join QR code (presenter's big screen) ── */
+.join-qr { margin: 8px 0 16px; }
+
+.join-qr-img {
+  display: block;
+  width: min(100%, 300px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.join-qr-placeholder { background: #f3f2f8; }
+
+.join-qr-warning {
+  max-width: 22rem;
+  margin: 10px auto 0;
+  color: var(--warn);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ── Word cloud of names (presenter) ─────────────────────────
+   Where each name goes is worked out in wordCloudLayout.js. Each name sits
+   at the centre of the cloud (left/top 50%) and is moved to its spot with
+   transform, so when the cloud rearranges, names glide instead of jumping. */
+.cloud {
+  position: relative;
+  min-height: clamp(360px, 62vh, 880px);
+  margin: 12px 0 8px;
+  overflow: hidden;
+  transition: height 0.4s ease;
+}
+
+.cloud-words {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.cloud-spot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  line-height: 1;
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    font-size 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cloud-word {
+  /* Sizes here must match boxWidth/boxHeight in wordCloudLayout.js:
+     1.1em line + 0.1em padding top and bottom = 1.3em tall */
+  font: inherit;
+  font-size: 1em;
+  font-weight: 800;
+  line-height: 1.1;
+  padding: 0.1em 0.25em;
+  white-space: nowrap;
+  border: 2px solid transparent;
+  border-radius: 0.3em;
+  background: transparent;
+  cursor: pointer;
+  animation: cloud-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  transition: color 0.15s ease, background 0.15s ease, opacity 0.3s ease;
+}
+
+.cloud-color-0 { color: var(--primary); }
+.cloud-color-1 { color: var(--accent); }
+.cloud-color-2 { color: var(--text); }
+.cloud-color-3 { color: color-mix(in srgb, var(--teal) 70%, #08332f); }
+
+/* Hover a name: it shows it would be removed */
+.cloud-word:hover:not(:disabled),
+.cloud-word:focus-visible {
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 10%, transparent);
+  text-decoration: line-through;
+}
+
+.cloud-word:disabled { cursor: default; }
+
+/* After the shuffle: people without a match */
+.cloud-word-waiting {
+  opacity: 0.45;
+  border-style: dashed;
+  border-color: var(--muted);
+}
+
+/* A new name pops in, overshoots a little, then settles */
+@keyframes cloud-pop {
+  from { transform: scale(0.2); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  to   { transform: scale(1); }
+}
+
+/* Shuffle sits in the exact middle of the cloud */
+.cloud-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.cloud-center p { margin: 0; }
+
+.cloud-shuffle {
+  font-size: 1.6rem;
+  padding: 18px 48px;
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.cloud-empty { font-size: 1.1rem; }
+.cloud-note { font-size: 0.95rem; }
+.cloud-tip { font-size: 0.85rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud,
+  .cloud-spot { transition: none; }
+  .cloud-word { animation: none; }
+}
+
+/* Hidden on screen, still read out by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Presenter's private PIN list (/present/:code/pins) ── */
+.pins-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px 0 48px;
+}
+
+.pins-top h1 { margin: 8px 0 4px; }
+.pins-top p { margin: 0 0 4px; }
+
+.pins-back {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pins-private {
+  margin: 16px 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--warn) 14%, var(--surface));
+  color: var(--text);
+}
+
+.pins-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pins-search {
+  flex: 1 1 220px;
+  width: auto;
+}
+
+.pins-table-wrap {
+  overflow-x: auto; /* a narrow phone scrolls the table, not the page */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.pins-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.pins-table th,
+.pins-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.pins-table tbody tr:last-child th,
+.pins-table tbody tr:last-child td { border-bottom: 0; }
+
+.pins-table thead th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.pins-name { font-weight: 700; }
+
+.pins-pin {
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pins-gift { color: var(--primary); }
+
+.pins-toggle { text-align: right; }
+
+.pins-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.pins-badge-ok   { background: color-mix(in srgb, var(--ok) 16%, transparent);   color: var(--ok); }
+.pins-badge-wait { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); }
